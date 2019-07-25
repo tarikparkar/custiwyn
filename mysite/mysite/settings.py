@@ -25,13 +25,25 @@ SECRET_KEY = 'aj2vlj*9t^=zb5sff#bi5$8imwd$zw$$9wq26#2zu2yz=ogenk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*','localhost']
 
 
 # Application definition
 
-INSTALLED_APPS = [
+TENANT_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'myclientapp',
+]
+
+SHARED_APPS = [
+    'django_tenants',
     'polls.apps.PollsConfig',
+    'customers.apps.CustomersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +52,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+
+INSTALLED_APPS = list (set(SHARED_APPS+TENANT_APPS))
+
 MIDDLEWARE = [
+    'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -76,7 +92,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django_tenants.postgresql_backend',
         'NAME': 'cust',
         'USER': 'postgres',
         'PASSWORD': 'letmein',
@@ -123,3 +139,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+# new code for multi tenant
+
+TENANT_MODEL = "customers.Client" # app.Model
+TENANT_DOMAIN_MODEL = "customers.Domain"  # app.Model
+
+DATABASE_ROUTERS = (
+    'django_tenants.routers.TenantSyncRouter',
+)
