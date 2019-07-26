@@ -30,16 +30,6 @@ ALLOWED_HOSTS = ['*','localhost']
 
 # Application definition
 
-TENANT_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'myclientapp',
-]
-
 SHARED_APPS = [
     'django_tenants',
     'polls.apps.PollsConfig',
@@ -52,8 +42,18 @@ SHARED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+TENANT_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'myclientapp',
+]
 
-INSTALLED_APPS = list (set(SHARED_APPS+TENANT_APPS))
+
+INSTALLED_APPS = list (set(SHARED_APPS + TENANT_APPS))
 
 MIDDLEWARE = [
     'django_tenants.middleware.main.TenantMainMiddleware',
